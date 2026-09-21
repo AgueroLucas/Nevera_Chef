@@ -115,6 +115,7 @@ function App() {
       {view === 'favorites' && <FavoriteView favorites={favorites} onRemove={async (id) => { await recipesApi.removeFavorite(id); setFavorites((current) => current.filter((favorite) => favorite.recipeId !== id)) }} />}
       {error && <p className="error-message global-error">{error}</p>}
     </main>
+    <div className="signature-tag">Lucas Agüero</div>
   </div>
 }
 

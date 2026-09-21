@@ -100,7 +100,7 @@ function App() {
         <button className={view === 'recipes' ? 'active' : ''} onClick={() => void searchRecipes()}>Recetas</button>
         <button className={view === 'favorites' ? 'active' : ''} onClick={() => void loadFavorites()}>Favoritos</button>
       </nav>
-      <button className="avatar" type="button" aria-label="Perfil">MC</button>
+      <button className="avatar" type="button" aria-label="Logo de Nevera Chef">NC</button>
     </header>
     <main>
       {view === 'pantry' && <>

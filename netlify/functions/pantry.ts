@@ -1,27 +1,16 @@
 import { and, asc, eq, ilike } from 'drizzle-orm'
 
 import { db } from './_lib/db'
-import { ingredients, userPantry, users } from './_lib/schema'
+import { ingredients, userPantry } from './_lib/schema'
 import { errorResponse, handleOptions, jsonResponse } from './_lib/response'
-import { emailSchema, pantryCreateSchema, pantryUpdateSchema } from './_lib/validators'
-
-const demoEmail = 'demo@neverachef.local'
-
-async function getUser(request: Request) {
-  const email = emailSchema.parse(request.headers.get('x-user-email') ?? demoEmail)
-  const [user] = await db
-    .insert(users)
-    .values({ email, name: email === demoEmail ? 'Chef invitado' : email.split('@')[0] })
-    .onConflictDoUpdate({ target: users.email, set: { name: users.name } })
-    .returning({ id: users.id })
-  return user
-}
+import { pantryCreateSchema, pantryUpdateSchema } from './_lib/validators'
+import { getRequestUser } from './_lib/user'
 
 export default async function pantry(request: Request) {
   if (request.method === 'OPTIONS') return handleOptions()
 
   try {
-    const user = await getUser(request)
+    const user = await getRequestUser(request)
 
     if (request.method === 'GET') {
       const url = new URL(request.url)

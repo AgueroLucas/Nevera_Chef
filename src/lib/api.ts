@@ -15,6 +15,26 @@ export type IngredientSuggestion = {
   defaultUnit: string
 }
 
+export type Recipe = {
+  id: string
+  spoonacularId: number
+  title: string
+  imageUrl?: string
+  readyInMinutes?: number
+  servings?: number
+  diets: string[]
+  matchPercent: number
+  missingIngredients: number
+}
+
+export type Favorite = {
+  id: string
+  recipeId: string
+  title: string
+  imageUrl?: string
+  readyInMinutes?: number
+}
+
 type PantryResponse = {
   pantry: PantryItem[]
   suggestions: IngredientSuggestion[]
@@ -39,4 +59,12 @@ export const pantryApi = {
   add: (input: { ingredientId: string; quantity: number; unit: string }) =>
     request<PantryItem>('/pantry', { method: 'POST', body: JSON.stringify(input) }),
   remove: (id: string) => request<{ deleted: boolean }>(`/pantry?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
+}
+
+export const recipesApi = {
+  search: (input: { ingredients: string[]; diets?: string[]; maxReadyTime?: number; number?: number }) =>
+    request<{ recipes: Recipe[] }>('/recipes-search', { method: 'POST', body: JSON.stringify(input) }),
+  favorites: () => request<{ favorites: Favorite[] }>('/favorites'),
+  saveFavorite: (recipeId: string) => request('/favorites', { method: 'POST', body: JSON.stringify({ recipeId }) }),
+  removeFavorite: (recipeId: string) => request(`/favorites?recipeId=${encodeURIComponent(recipeId)}`, { method: 'DELETE' }),
 }
